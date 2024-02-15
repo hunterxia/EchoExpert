@@ -1,4 +1,4 @@
-// File: /Users/hunterxia/Development/cs_496_nuvention/echo_expert/app/layout.jsx
+// File: /Users/ConnieLuk/School/NU/2024Winter/CS496/EchoExpert/app/layout.jsx
 import * as entry from '../../../app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

@@ -1,0 +1,115 @@
+{
+    "professor": "Craig Garthwaite",
+    "news": [
+        {
+            "title": "Does Taylor Swift have the power to sway the election?",
+            "url": "https://www.cnn.com/videos/politics/2024/02/03/smr-whats-swifts-endorsement-worth.cnn",
+            "date": "February 03, 2024\u00e2\u0080\u0093 from CNN"
+        },
+        {
+            "title": "An Underwhelming End to Oprah\u00e2\u0080\u0099s Dr. Oz Drama",
+            "url": "https://www.washingtonpost.com/lifestyle/2022/11/04/oprah-fetterman-oz-drama/",
+            "date": "November 04, 2022\u00e2\u0080\u0093 from The Washington Post"
+        },
+        {
+            "title": "Employer-Sponsored Coverage Keeps Getting More Expensive",
+            "url": "https://www.washingtonpost.com/politics/2021/11/11/employer-sponsored-coverage-keeps-getting-more-expensive/",
+            "date": "November 11, 2021\u00e2\u0080\u0093 from The Washington Post"
+        },
+        {
+            "title": "Democrats Choosing Less Risky Path on Drug Prices",
+            "url": "https://www.nytimes.com/2021/11/06/upshot/democrats-drug-prices.html",
+            "date": "November 06, 2021\u00e2\u0080\u0093 from The New York Times"
+        },
+        {
+            "title": "Opinion: If We Want Cures to Diseases like COVID-19, We Should Stop Vilifying Drug Companies",
+            "url": "https://www.chicagotribune.com/opinion/commentary/ct-opinion-merck-covid-molnupiravir-drug-price-20211101-dtvf2eh55jbwbio2hfrw73ktpq-story.html",
+            "date": "November 02, 2021\u00e2\u0080\u0093 from The Chicago Tribune"
+        },
+        {
+            "title": "Can the US Cut Drug Prices Without Sacrificing New Cures?",
+            "url": "https://www.vox.com/policy-and-politics/22702855/build-build-better-plan-medicare-negotiate-drug-prices",
+            "date": "October 13, 2021\u00e2\u0080\u0093 from Vox"
+        },
+        {
+            "title": "America\u00e2\u0080\u0099s Supreme Court Paves the Way for College Athletes to Get Paid",
+            "url": "https://www.economist.com/united-states/2021/06/22/americas-supreme-court-paves-the-way-for-college-athletes-to-get-paid",
+            "date": "June 22, 2021\u00e2\u0080\u0093 from The Economist"
+        },
+        {
+            "title": "Opinion: Medicare Must Study Unproven, Expensive Alzheimer\u00e2\u0080\u0099s Drug",
+            "url": "https://www.bloomberg.com/opinion/articles/2021-06-15/medicare-must-study-unproven-expensive-alzheimer-s-drug?srnd=opinion",
+            "date": "June 15, 2021\u00e2\u0080\u0093 from Bloomberg"
+        },
+        {
+            "title": "Taking \u00e2\u0080\u0098Extraordinary Measures,\u00e2\u0080\u0099 Biden Backs Suspending Patents on Vaccines",
+            "url": "https://www.nytimes.com/2021/05/05/us/politics/biden-covid-vaccine-patents.html",
+            "date": "May 05, 2021\u00e2\u0080\u0093 from The New York Times"
+        },
+        {
+            "title": "Americans Pay More for Prescription Drugs Than Anyone Else. Can Amazon Pharmacy Change That?",
+            "url": "https://www.marketwatch.com/story/americans-pay-more-for-prescription-drugs-than-anyone-else-can-amazon-pharmacy-change-that-2020-11-19",
+            "date": "November 29, 2020\u00e2\u0080\u0093 from Market Watch"
+        },
+        {
+            "title": "Amazon Opens Online Pharmacy, Shaking Up Another Industry",
+            "url": "https://apnews.com/article/amazon-opens-online-pharmacy-ebebe13bef54220ec3b0c7ffdcda2a68",
+            "date": "November 17, 2020\u00e2\u0080\u0093 from AP"
+        },
+        {
+            "title": "The Nobel in Medicine Went to 3 Scientists Who Co-Discovered Hepatitis C",
+            "url": "https://www.vox.com/2020/10/5/21502050/nobel-2020-medicine-hepatitis-c",
+            "date": "October 05, 2020\u00e2\u0080\u0093 from Vox"
+        },
+        {
+            "title": "Here's What We Know\u00e2\u0080\u0093And What We Don't\u00e2\u0080\u0093About Trump's $200 Drug Discount Cards",
+            "url": "https://www.cnn.com/2020/09/25/politics/senior-citizens-drug-discount-cards-trump-health-care/index.html",
+            "date": "September 25, 2020\u00e2\u0080\u0093 from CNN"
+        },
+        {
+            "title": "NCAA Rules Allow White Students and Coaches to Profit Off Labor of Black Ones, Study Finds",
+            "url": "https://www.washingtonpost.com/business/2020/09/07/ncaa-student-athletes-pay-equity/",
+            "date": "September 08, 2020\u00e2\u0080\u0093 from The Washington Post"
+        },
+        {
+            "title": "Affluent White Student-Athletes are Profiting From the Labor of Their Poor Black Peers, Study Says",
+            "url": "https://www.cnn.com/2020/09/08/us/ncaa-student-athletes-equal-pay-trnd/index.html",
+            "date": "September 08, 2020\u00e2\u0080\u0093 from CNN"
+        },
+        {
+            "title": "Star College Quarterbacks Should Be Making $2.4 Million a Year",
+            "url": "https://www.bloomberg.com/news/articles/2020-09-01/star-college-quarterbacks-should-be-making-2-4-million-a-year?srnd=markets-vp",
+            "date": "September 01, 2020\u00e2\u0080\u0093 from Bloomberg"
+        },
+        {
+            "title": "Remdesivir Priced At More Than $3,100 For A Course Of Treatment",
+            "url": "https://www.npr.org/sections/health-shots/2020/06/29/884648842/remdesivir-priced-at-more-than-3-100-for-a-course-of-treatment",
+            "date": "June 29, 2020\u00e2\u0080\u0093 from NPR"
+        },
+        {
+            "title": "Pandemics Leave Us Forever Altered",
+            "url": "https://www.theatlantic.com/magazine/archive/2020/06/pandemics-plagues-history/610558/",
+            "date": "May 09, 2020\u00e2\u0080\u0093 from The Atlantic"
+        },
+        {
+            "title": "Putting A Price On COVID-19 Treatment Remdesivir",
+            "url": "https://www.npr.org/sections/health-shots/2020/05/08/851632704/putting-a-price-on-covid-19-treatment-remdesivir",
+            "date": "May 08, 2020\u00e2\u0080\u0093 from NPR"
+        },
+        {
+            "title": "Historic Financial Decline Hits Doctors, Dentists and Hospitals \u00e2\u0080\u0094 Despite Covid-19 \u00e2\u0080\u0094 Threatening Overall Economy",
+            "url": "https://www.washingtonpost.com/business/2020/05/04/financial-distress-among-doctors-hospitals-despite-covid-19-weighs-heavily-economy/",
+            "date": "May 04, 2020\u00e2\u0080\u0093 from The Washington Post"
+        },
+        {
+            "title": "Coronavirus Highlights the Pitfalls of Health Deductibles",
+            "url": "https://www.nytimes.com/2020/03/09/upshot/health-cost-sharing-coronavirus.html",
+            "date": "March 09, 2020\u00e2\u0080\u0093 from The New York Times"
+        },
+        {
+            "title": "10 Health Policy Questions to Answer in 2020",
+            "url": "https://www.politico.com/newsletters/politico-pulse/2020/01/06/10-health-policy-questions-to-answer-in-2020-784079",
+            "date": "January 06, 2020\u00e2\u0080\u0093 from Politico"
+        }
+    ]
+}

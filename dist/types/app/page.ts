@@ -1,4 +1,4 @@
-// File: /Users/hunterxia/Development/cs_496_nuvention/echo_expert/app/page.jsx
+// File: /Users/ConnieLuk/School/NU/2024Winter/CS496/EchoExpert/app/page.jsx
 import * as entry from '../../../app/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
