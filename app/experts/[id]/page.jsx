@@ -6,8 +6,7 @@ import { useState } from "react";
 
 export default function Page({ params }) {
   const expert = experts.find((expert) => expert.id === params.id);
-  const allMediaAppearances =
-    expertMediaAppearances[expert.name] || expertMediaAppearances["general"];
+  const allMediaAppearances = expertMediaAppearances[expert.name];
   const [mediaAppearances, setMediaAppearances] = useState(
     allMediaAppearances.slice(0, 5)
   );
@@ -21,6 +20,8 @@ export default function Page({ params }) {
   const handleContactClick = () => {
     window.location.href = `mailto:${expert.email}`;
   };
+
+  const hasMediaAppearances = mediaAppearances.length > 0;
 
   return (
     <div className="container mx-auto p-4">
@@ -48,29 +49,33 @@ export default function Page({ params }) {
 
           <div className="bg-white p-4 shadow-lg rounded-lg mt-4">
             <h2 className="text-xl font-bold mb-2">Media Appearances</h2>
-            <ul className="list-disc pl-5">
-              {mediaAppearances.map((appearance, index) => (
-                <li key={index} className="mb-2">
-                  <a
-                    href={appearance.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:text-blue-800"
-                  >
-                    {appearance.title} - {appearance.date}
-                  </a>
-                </li>
-              ))}
-            </ul>
-            {!showAll && <Button onClick={handleViewMore}>View More</Button>}
+            {hasMediaAppearances ? (
+              <ul className="list-disc pl-5">
+                {mediaAppearances.map((appearance, index) => (
+                  <li key={index} className="mb-2">
+                    <a
+                      href={appearance.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800"
+                    >
+                      {appearance.title} - {appearance.date}
+                    </a>
+                  </li>
+                ))}
+                {!showAll && allMediaAppearances.length > 5 && (
+                  <Button onClick={handleViewMore}>View More</Button>
+                )}
+              </ul>
+            ) : (
+              <p>No media appearances available.</p>
+            )}
           </div>
 
           {/* Contact Button */}
           <Button onClick={handleContactClick}>Contact {expert.name}</Button>
         </div>
-      ) : (
-        <p className="text-center text-xl">Expert not found.</p>
-      )}
+      ) : null}
     </div>
   );
 }
