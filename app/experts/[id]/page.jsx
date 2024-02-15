@@ -1,22 +1,22 @@
 "use client";
 import experts from "../../data/experts_data.json";
+import expertMediaAppearances from "../../data/experts_news.json";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 export default function Page({ params }) {
   const expert = experts.find((expert) => expert.id === params.id);
+  const allMediaAppearances =
+    expertMediaAppearances[expert.name] || expertMediaAppearances["general"];
+  const [mediaAppearances, setMediaAppearances] = useState(
+    allMediaAppearances.slice(0, 5)
+  );
+  const [showAll, setShowAll] = useState(false);
 
-  expert.publications = [
-    { title: "The Future of Renewable Energy", date: "2022-01-15", url: "#" },
-    { title: "Impact of Climate Change", date: "2022-05-10", url: "#" },
-  ];
-  expert.mediaAppearances = [
-    {
-      title: "Interview on Environmental Trends",
-      date: "2023-02-20",
-      url: "#",
-    },
-    { title: "Podcast on Sustainable Living", date: "2023-04-05", url: "#" },
-  ];
+  const handleViewMore = () => {
+    setMediaAppearances(allMediaAppearances);
+    setShowAll(true);
+  };
 
   const handleContactClick = () => {
     window.location.href = `mailto:${expert.email}`;
@@ -46,30 +46,10 @@ export default function Page({ params }) {
             </p>
           </div>
 
-          {/* Recent Publications */}
-          <div className="bg-white p-4 shadow-lg rounded-lg mt-4">
-            <h2 className="text-xl font-bold mb-2">Recent Publications</h2>
-            <ul className="list-disc pl-5">
-              {expert.publications.map((publication, index) => (
-                <li key={index} className="mb-2">
-                  <a
-                    href={publication.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:text-blue-800"
-                  >
-                    {publication.title} - {publication.date}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Media Appearances */}
           <div className="bg-white p-4 shadow-lg rounded-lg mt-4">
             <h2 className="text-xl font-bold mb-2">Media Appearances</h2>
             <ul className="list-disc pl-5">
-              {expert.mediaAppearances.map((appearance, index) => (
+              {mediaAppearances.map((appearance, index) => (
                 <li key={index} className="mb-2">
                   <a
                     href={appearance.url}
@@ -82,8 +62,10 @@ export default function Page({ params }) {
                 </li>
               ))}
             </ul>
+            {!showAll && <Button onClick={handleViewMore}>View More</Button>}
           </div>
 
+          {/* Contact Button */}
           <Button onClick={handleContactClick}>Contact {expert.name}</Button>
         </div>
       ) : (
