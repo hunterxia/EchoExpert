@@ -1,4 +1,6 @@
 import { initializeApp } from "firebase/app";
+import { getStorage } from "firebase/storage";
+
 import {
   getFirestore,
   doc,
@@ -14,6 +16,7 @@ import {
   where,
   deleteField,
 } from "firebase/firestore";
+
 import {
   getAuth,
   GoogleAuthProvider,
@@ -34,86 +37,28 @@ const firebaseConfig = {
   appId: "1:534936099874:web:2d683baf0060c260f77e7b",
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
+const storage = getStorage(app);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
 const provider = new GoogleAuthProvider();
 provider.setCustomParameters({ prompt: "select_account" });
 
-const signInWithGoogle = async (user, navigate) => {
+const signInWithGoogle = async (user) => {
   const { displayName, photoURL, uid } = user;
-  localStorage.setItem("isSignedIn", true);
+  localStorage.setItem("lastSignIn", new Date().toISOString());
   localStorage.setItem("name", displayName);
   localStorage.setItem("photoUrl", photoURL);
   localStorage.setItem("uid", uid);
-  // navigate(0);
-};
 
-const prepareStat = async (user, userRef) => {
-  const updatedUserData = Object.assign(user, {
-    stats: {
-      health: 1,
-      intelligence: 1,
-      strength: 1,
-      happiness: 1,
-      creativity: 1,
-    },
-  });
-
-  await setDoc(userRef, updatedUserData);
-};
-
-const signUpWithGoogle = async (navigate) => {
-  signInWithPopup(auth, provider)
-    .then(async (result) => {
-      const user = result.user;
-
-      const isSignedUp = await checkIfSignedUp(user.uid);
-      if (isSignedUp) {
-        const { uid } = user;
-        const userRef = doc(db, "users", uid);
-        const snapshot = await getDoc(userRef);
-
-        if (snapshot.exists()) {
-          const userData = snapshot.data();
-          if (!userData.stats) {
-            await prepareStat(userData, userRef);
-          }
-        }
-
-        signInWithGoogle(user, navigate);
-      } else {
-        const userDocRef = doc(db, "users", user.uid);
-        const userData = {
-          email: user.email,
-          displayName: user.displayName,
-          photoURL: user.photoURL,
-          uid: user.uid,
-          numFollowers: 0,
-          numFollowings: 0,
-          quests: {},
-          stats: {
-            health: 1,
-            intelligence: 1,
-            strength: 1,
-            happiness: 1,
-            creativity: 1,
-          },
-        };
-
-        await setDoc(userDocRef, userData, { merge: true });
-        signInWithGoogle(user, navigate);
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-};
-
-const checkIfLoggedIn = () => {
-  const isSignedIn = localStorage.getItem("isSignedIn");
-  return isSignedIn;
+  const userRef = doc(db, "users", uid);
+  const snapshot = await getDoc(userRef);
+  const settings = snapshot.data()?.settings;
+  localStorage.setItem("sendEmail", settings?.sendEmail);
+  localStorage.setItem("sendBefore", settings?.sendBefore);
+  localStorage.setItem("sendTime", settings?.sendTime);
 };
 
 const checkIfSignedUp = async (uid) => {
@@ -123,42 +68,49 @@ const checkIfSignedUp = async (uid) => {
   return snapshot.exists();
 };
 
+const signUpWithGoogle = async (navigate) => {
+  signInWithPopup(auth, provider)
+    .then(async (result) => {
+      const user = result.user;
+      const isSignedUp = await checkIfSignedUp(user.uid);
+      if (isSignedUp) {
+        signInWithGoogle(user, navigate);
+      } else {
+        const userDocRef = doc(db, "users", user.uid);
+        const userData = {
+          email: user.email,
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+          uid: user.uid,
+        };
+        await setDoc(userDocRef, userData, { merge: true });
+        signInWithGoogle(user, navigate);
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+};
+
 const handleLogOut = () => {
   signOut(auth);
   localStorage.removeItem("isSignedIn");
   localStorage.removeItem("name");
   localStorage.removeItem("photoUrl");
   localStorage.removeItem("uid");
+  localStorage.clear();
   window.location.reload();
 };
 
-const deleteUserFirestore = async (uid) => {
-  const userDocRef = doc(db, "users", uid);
-  await deleteDoc(userDocRef);
-};
-
-const handleDelete = async () => {
-  const auth = getAuth();
-  const user = auth.currentUser;
-
-  if (user) {
-    try {
-      //need to delete all firebase data somehow
-      await deleteUserFirestore(user.uid);
-      await deleteUser(user);
-
-      localStorage.removeItem("isSignedIn");
-      localStorage.removeItem("name");
-      localStorage.removeItem("photoUrl");
-      localStorage.removeItem("uid");
-
-      window.location.reload();
-    } catch (error) {
-      console.log(error);
-    }
-  } else {
-    console.log("no user exist");
+const checkIfLoggedIn = () => {
+  const lastSignIn = localStorage.getItem("lastSignIn");
+  if (lastSignIn) {
+    const lastSignInTime = new Date(lastSignIn).getTime();
+    const currentTime = new Date().getTime();
+    // Check if the last sign-in was within the last 24 hours
+    return currentTime - lastSignInTime <= 86400000; // 86400000 ms = 24 hours
   }
+  return false;
 };
 
 const getUserData = async () => {
@@ -174,23 +126,19 @@ const getUserData = async () => {
   return null;
 };
 
-const fetchAllUsers = async () => {
-  const userDocument = await getDocs(collection(db, "users"));
-  let userData = {};
-  userDocument.forEach((doc) => {
-    userData[doc.id] = doc.data();
-  });
-
-  return userData;
+const updateUserSettings = async (uid, settings) => {
+  console.log("updating settings", settings);
+  const userRef = doc(db, "users", uid);
+  await updateDoc(userRef, settings);
 };
 
 export {
   db,
   auth,
+  storage,
   signUpWithGoogle,
   checkIfLoggedIn,
-  handleLogOut,
-  handleDelete,
   getUserData,
-  fetchAllUsers,
+  handleLogOut,
+  updateUserSettings,
 };
