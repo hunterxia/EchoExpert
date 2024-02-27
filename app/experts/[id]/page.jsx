@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { db } from "../../firebase";
+import { db, checkIfLoggedIn } from "../../firebase";
 import {
   collection,
   query,
@@ -19,17 +19,23 @@ import { Button } from "@/components/ui/button";
 export default function Page({ params }) {
   const expert = experts.find((e) => e.id === params.id);
   const allMediaAppearances = expertMediaAppearances[expert.name];
-  const [mediaAppearances, setMediaAppearances] = useState(
-    allMediaAppearances.slice(0, 5)
-  );
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showAll, setShowAll] = useState(false);
   const [commentsData, setCommentsData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [mediaAppearances, setMediaAppearances] = useState(
+    allMediaAppearances.slice(0, 5)
+  );
   const [averageRatings, setAverageRatings] = useState({
     averageRateContact: 0,
     averageUsefulness: 0,
     averageTechnicality: 0,
   });
+
+  useEffect(() => {
+    const loggedIn = checkIfLoggedIn();
+    setIsLoggedIn(loggedIn);
+  }, []);
 
   const handleViewMore = () => {
     setMediaAppearances(allMediaAppearances);
@@ -176,7 +182,12 @@ export default function Page({ params }) {
             />
           </div>
           <RatingForm expertId={expert.id} />
-          <CommentSection comments={commentsData} loading={loading} />
+          <h3 className="text-2xl font-bold my-4">Comments</h3>
+          {isLoggedIn ? (
+            <CommentSection comments={commentsData} loading={loading} />
+          ) : (
+            <p>Please sign in to see the comments.</p>
+          )}
         </div>
       )}
     </div>

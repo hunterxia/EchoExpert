@@ -6,7 +6,6 @@ const CommentSection = ({ comments, loading }) => {
 
   return (
     <div>
-      <h3 className="text-2xl font-bold my-4">Comments</h3>
       {loading ? (
         <div className="text-center py-6">
           <p>Loading comments...</p>

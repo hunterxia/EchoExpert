@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import RatingComponent from "./RatingComponent";
+import { checkIfLoggedIn, signUpWithGoogle } from "../firebase";
 import { Label } from "@/components/ui/label";
 import { db } from "../firebase";
 import {
@@ -22,6 +23,7 @@ import {
 
 export default function RatingFormDialog({ expertId }) {
   const [showRatingForm, setShowRatingForm] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState(null);
   const [formData, setFormData] = useState({
     rateContact: 0,
@@ -29,6 +31,20 @@ export default function RatingFormDialog({ expertId }) {
     technicality: 0,
     additionalFeedback: "",
   });
+
+  const handleSignIn = async () => {
+    try {
+      await signUpWithGoogle();
+      setIsLoggedIn(true);
+    } catch (error) {
+      console.error("Error signing in:", error);
+    }
+  };
+
+  useEffect(() => {
+    const loggedIn = checkIfLoggedIn();
+    setIsLoggedIn(loggedIn);
+  }, []);
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -106,48 +122,52 @@ export default function RatingFormDialog({ expertId }) {
         <DialogHeader>
           <DialogTitle>Rate the Expert</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleFormSubmit}>
-          <div className="grid gap-4 py-4">
-            <RatingComponent
-              label="How easy was the interviewee to contact?"
-              rating={formData.rateContact}
-              handleRatingChange={(value) =>
-                handleRatingChange("rateContact", value)
-              }
-            />
-            <RatingComponent
-              label="How useful was the info the interviewee provided?"
-              rating={formData.usefulness}
-              handleRatingChange={(value) =>
-                handleRatingChange("usefulness", value)
-              }
-            />
-            <RatingComponent
-              label="How technical was the info the interviewee provided?"
-              rating={formData.technicality}
-              handleRatingChange={(value) =>
-                handleRatingChange("technicality", value)
-              }
-            />
-            <Label>Any additional feedback?</Label>
-            <textarea
-              name="additionalFeedback"
-              onChange={handleFeedbackChange}
-              value={formData.additionalFeedback}
-              className="border p-2 rounded w-full"
-            />
-          </div>
-          <DialogFooter>
-            <Button
-              type="button"
-              onClick={() => setShowRatingForm(false)}
-              variant="outline"
-            >
-              Cancel
-            </Button>
-            <Button type="submit">Submit</Button>
-          </DialogFooter>
-        </form>
+        {isLoggedIn ? (
+          <form onSubmit={handleFormSubmit}>
+            <div className="grid gap-4 py-4">
+              <RatingComponent
+                label="How easy was the interviewee to contact?"
+                rating={formData.rateContact}
+                handleRatingChange={(value) =>
+                  handleRatingChange("rateContact", value)
+                }
+              />
+              <RatingComponent
+                label="How useful was the info the interviewee provided?"
+                rating={formData.usefulness}
+                handleRatingChange={(value) =>
+                  handleRatingChange("usefulness", value)
+                }
+              />
+              <RatingComponent
+                label="How technical was the info the interviewee provided?"
+                rating={formData.technicality}
+                handleRatingChange={(value) =>
+                  handleRatingChange("technicality", value)
+                }
+              />
+              <Label>Any additional feedback?</Label>
+              <textarea
+                name="additionalFeedback"
+                onChange={handleFeedbackChange}
+                value={formData.additionalFeedback}
+                className="border p-2 rounded w-full"
+              />
+            </div>
+            <DialogFooter>
+              <Button
+                type="button"
+                onClick={() => setShowRatingForm(false)}
+                variant="outline"
+              >
+                Cancel
+              </Button>
+              <Button type="submit">Submit</Button>
+            </DialogFooter>
+          </form>
+        ) : (
+          <p>Please sign in to submit a rating.</p>
+        )}
       </DialogContent>
     </Dialog>
   );
