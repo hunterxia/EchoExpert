@@ -57,18 +57,13 @@ export default function RatingFormDialog({ expertId }) {
 
     try {
       await addDoc(collection(db, "ratings"), fullFormData);
-
-      // Step 2: Update the expert's aggregate rating for each category
       const expertRef = doc(db, "experts", expertId);
       const expertSnap = await getDoc(expertRef);
 
       if (expertSnap.exists()) {
         const expertData = expertSnap.data();
-
-        // Combine old ratings with the new rating
         const allRatings = [...(expertData.ratings || []), fullFormData];
 
-        // Calculate the averages for each category
         const averages = allRatings.reduce(
           (acc, rating) => {
             acc.rateContact += rating.rateContact;

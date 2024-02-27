@@ -10,6 +10,7 @@ import {
   doc,
 } from "firebase/firestore";
 import experts from "../../data/experts_data.json";
+import citations from "../../data/experts_citation.json";
 import expertMediaAppearances from "../../data/experts_news.json";
 import RatingForm from "../../components/RatingForm";
 import RatingChart from "../../components/RatingChart";
@@ -18,6 +19,10 @@ import { Button } from "@/components/ui/button";
 
 export default function Page({ params }) {
   const expert = experts.find((e) => e.id === params.id);
+  const citation = citations[expert.name];
+  const [citationsToShow, setCitationsToShow] = useState(citation.slice(0, 5));
+  const [showAllCitations, setShowAllCitations] = useState(false);
+
   const allMediaAppearances = expertMediaAppearances[expert.name];
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showAll, setShowAll] = useState(false);
@@ -40,6 +45,11 @@ export default function Page({ params }) {
   const handleViewMore = () => {
     setMediaAppearances(allMediaAppearances);
     setShowAll(true);
+  };
+
+  const handleViewMoreCitations = () => {
+    setCitationsToShow(citation);
+    setShowAllCitations(true);
   };
 
   const fetchComments = async (expertId) => {
@@ -114,6 +124,7 @@ export default function Page({ params }) {
   };
 
   const hasMediaAppearances = mediaAppearances.length > 0;
+  const hasCitation = citation && citation.length > 0;
 
   return (
     <div className="container mx-auto p-4">
@@ -144,7 +155,6 @@ export default function Page({ params }) {
             </p>
           </div>
 
-          {/* Media Appearances */}
           <div className="bg-white p-4 shadow-lg rounded-lg mt-4">
             <h2 className="text-xl font-bold mb-2">Media Appearances</h2>
             {hasMediaAppearances ? (
@@ -167,6 +177,33 @@ export default function Page({ params }) {
               </ul>
             ) : (
               <p>No media appearances available.</p>
+            )}
+          </div>
+
+          <div className="bg-white p-4 shadow-lg rounded-lg mt-4">
+            <h2 className="text-xl font-bold mb-2">Citations</h2>
+            {citation && citation.length > 0 ? (
+              <ul className="list-disc pl-5">
+                {citationsToShow.map((cit, index) => (
+                  <li key={index} className="mb-2">
+                    <a
+                      href={cit.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800"
+                    >
+                      {cit.title}
+                    </a>
+                    <a> {cit.citations}</a>
+                    <p>Co-authors: {cit.co_authors}</p>
+                  </li>
+                ))}
+                {!showAllCitations && citation.length > 5 && (
+                  <Button onClick={handleViewMoreCitations}>View More</Button>
+                )}
+              </ul>
+            ) : (
+              <p>No citations available.</p>
             )}
           </div>
 
