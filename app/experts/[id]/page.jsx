@@ -211,24 +211,29 @@ export default function Page({ params }) {
             )}
           </div>
 
-          <Button onClick={handleContactClick}>Contact {expert.name}</Button>
+          <Button className="mt-4"onClick={handleContactClick}>Contact {expert.name}</Button>
 
           {/* Rating and Comments */}
-          <div className="bg-white p-4 shadow-lg rounded-lg mt-4">
-            <h2 className="text-xl font-bold mb-2">Rating Distribution</h2>
+          <div className="flex flex-row justify-between items-start mt-8">
+          <div className="w-1/3">
+            <h2 className="text-2xl font-bold mb-2">Rating Distribution</h2>
             <RatingChart
               contactAvg={averageRatings.averageRateContact}
               technicalAvg={averageRatings.averageTechnicality}
               usefulAvg={averageRatings.averageUsefulness}
             />
           </div>
+          <div className="w-2/3 flex flex-col items-center mt-20">
           <RatingForm expertId={expert.id} />
+          </div>
+          </div>
           <h3 className="text-2xl font-bold my-4">Comments</h3>
           {isLoggedIn ? (
             <CommentSection comments={commentsData} loading={loading} />
           ) : (
             <p>Please sign in to see the comments.</p>
           )}
+          
         </div>
       )}
     </div>

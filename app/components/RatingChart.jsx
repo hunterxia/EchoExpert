@@ -2,53 +2,47 @@ import React from "react";
 import { Bar } from "react-chartjs-2";
 import "chart.js/auto";
 
+const StarRating = ({ value }) => {
+  const fullStars = Math.floor(value);
+  const halfStar = value % 1 >= 0.5 ? 1 : 0;
+  const emptyStars = 5 - fullStars - halfStar;
+
+  return (
+    <div className="flex items-center">
+      {[...Array(fullStars)].map((_, i) => (
+        <span key={i} className="text-yellow-400">★</span>
+      ))}
+      {halfStar === 1 && <span className="text-yellow-400">★</span>}
+      {[...Array(emptyStars)].map((_, i) => (
+        <span key={i} className="text-gray-300">☆</span>
+      ))}
+      <span className="ml-2 text-gray-600">{value.toFixed(1)}</span>
+    </div>
+  );
+};
+
 const RatingChart = ({ contactAvg, technicalAvg, usefulAvg }) => {
-  // Define chart options
-  const options = {
-    indexAxis: "y",
-    elements: {
-      bar: {
-        borderWidth: 2,
-      },
-    },
-    responsive: true,
-    plugins: {
-      legend: {
-        display: false, // Hide the legend
-      },
-      title: {
-        display: true,
-      },
-    },
-    scales: {
-      x: {
-        beginAtZero: true, // Ensures the scale starts at zero
-        max: 5, // Assuming the rating is out of 5
-        grid: {
-          display: false, // Hide grid lines
-        },
-      },
-      y: {
-        grid: {
-          display: false, // Hide grid lines
-        },
-      },
-    },
-  };
-
-  // Define the chart data
-  const chartData = {
-    labels: ["Contactibility", "Technicality", "Usefulness of Info"],
-    datasets: [
-      {
-        label: "", // Removed the label
-        data: [contactAvg, technicalAvg, usefulAvg],
-        backgroundColor: "rgba(0, 85, 253, 1)", // Set to black with some transparency
-      },
-    ],
-  };
-
-  return <Bar data={chartData} options={options} />;
+  const average = (contactAvg + technicalAvg + usefulAvg) / 3;
+  return (
+    <div>
+      <div className="flex justify-between items-center my-2">
+        <div className="text-xl text-gray-700">Overall</div>
+        <StarRating value={average} />
+      </div>
+      <div className="flex justify-between items-center my-2">
+        <div className="text-xl text-gray-700">Contactibility</div>
+        <StarRating value={contactAvg} />
+      </div>
+      <div className="flex justify-between items-center my-2">
+        <div className="text-xl text-gray-700">Technicality</div>
+        <StarRating value={technicalAvg} />
+      </div>
+      <div className="flex justify-between items-center my-2">
+        <div className="text-xl text-gray-700">Usefulness of Info</div>
+        <StarRating value={usefulAvg} />
+      </div>
+    </div>
+  );
 };
 
 export default RatingChart;
