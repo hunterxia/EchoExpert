@@ -40,7 +40,7 @@ export default function Page({ params }) {
   });
 
   const handleBackClick = () => {
-    router.push("/");
+    router.back();
   };
 
   useEffect(() => {
