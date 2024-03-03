@@ -88,6 +88,7 @@ export default function RatingFormDialog({ expertId }) {
       }
 
       setShowRatingForm(false);
+      window.location.reload();
     } catch (error) {
       console.error("Error updating expert's rating: ", error);
     }

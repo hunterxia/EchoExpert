@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import AccountButton from "./Login";
+import UserNav from "./UserNav";
 
 export default function Header() {
   return (
@@ -13,10 +14,12 @@ export default function Header() {
           height={200}
           style={{
             maxWidth: "100%",
-            height: "auto"
-          }} />
+            height: "auto",
+          }}
+        />
       </Link>
-      <AccountButton/>
+      <UserNav />
+      <AccountButton />
     </header>
   );
 }

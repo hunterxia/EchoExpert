@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Comment = ({ commentData }) => {
+  if (!commentData.additionalFeedback) {
+    return null;
+  }
+
   return (
     <div className="flex items-center space-x-4 p-3 border-b">
       <Avatar>

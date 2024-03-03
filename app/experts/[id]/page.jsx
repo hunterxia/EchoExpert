@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Header from "@/app/components/Header";
 import { db, checkIfLoggedIn } from "../../firebase";
 import {
   collection,
@@ -38,10 +39,6 @@ export default function Page({ params }) {
     averageUsefulness: 0,
     averageTechnicality: 0,
   });
-
-  const handleBackClick = () => {
-    router.back();
-  };
 
   useEffect(() => {
     const loggedIn = checkIfLoggedIn();
@@ -134,7 +131,7 @@ export default function Page({ params }) {
 
   return (
     <div className="container mx-auto p-4">
-      <Button onClick={handleBackClick}>Back</Button>
+      <Header />
       {Object.keys(expert).length > 0 && (
         <div className="mx-auto">
           {/* Expert Details */}
