@@ -1,130 +1,151 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import RatingComponent from "./RatingComponent";
+import { checkIfLoggedIn, signUpWithGoogle } from "../firebase";
+import { Label } from "@/components/ui/label";
+import { db } from "../firebase";
+import {
+  doc,
+  updateDoc,
+  arrayUnion,
+  getDoc,
+  collection,
+  addDoc,
+} from "firebase/firestore";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 
-const RatingComponent = ({ label }) => {
-  const [rating, setRating] = useState(0);
-
-  return (
-    <div>
-      <label className="block text-gray-700 text-sm font-bold mb-2">
-        {label}
-      </label>
-      <div className="flex">
-        {[1, 2, 3, 4, 5].map((number) => (
-          <div
-            key={number}
-            className={`h-8 w-8 flex items-center justify-center rounded-full mx-1 cursor-pointer 
-                                  ${
-                                    number === rating
-                                      ? "bg-orange-500"
-                                      : "bg-gray-300"
-                                  } text-white`}
-            onClick={() => setRating(number)}
-          >
-            {number}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-export default function RatingFormDialog({ submitRating }) {
+export default function RatingFormDialog({ expertId }) {
   const [showRatingForm, setShowRatingForm] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userId, setUserId] = useState(null);
   const [formData, setFormData] = useState({
-    name: "",
-    date: "",
     rateContact: 0,
-    usedInfo: "",
     usefulness: 0,
     technicality: 0,
-    keywords: [],
     additionalFeedback: "",
   });
 
-  const handleRatingFormOpen = () => {
-    setShowRatingForm(true);
+  const handleSignIn = async () => {
+    try {
+      await signUpWithGoogle();
+      setIsLoggedIn(true);
+    } catch (error) {
+      console.error("Error signing in:", error);
+    }
   };
 
-  const handleRatingFormClose = () => {
-    setShowRatingForm(false);
-  };
+  useEffect(() => {
+    const loggedIn = checkIfLoggedIn();
+    setIsLoggedIn(loggedIn);
+  }, []);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleKeywordChange = (keyword) => {
-    setFormData((prev) => ({
-      ...prev,
-      keywords: prev.keywords.includes(keyword)
-        ? prev.keywords.filter((kw) => kw !== keyword)
-        : [...prev.keywords, keyword],
-    }));
-  };
-
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    submitRating(formData);
-    handleRatingFormClose();
+
+    const fullFormData = {
+      userId,
+      ...formData,
+      timestamp: new Date(),
+    };
+
+    try {
+      await addDoc(collection(db, "ratings"), fullFormData);
+      const expertRef = doc(db, "experts", expertId);
+      const expertSnap = await getDoc(expertRef);
+
+      if (expertSnap.exists()) {
+        const expertData = expertSnap.data();
+        const allRatings = [...(expertData.ratings || []), fullFormData];
+
+        const averages = allRatings.reduce(
+          (acc, rating) => {
+            acc.rateContact += rating.rateContact;
+            acc.usefulness += rating.usefulness;
+            acc.technicality += rating.technicality;
+            return acc;
+          },
+          { rateContact: 0, usefulness: 0, technicality: 0 }
+        );
+
+        const numRatings = allRatings.length;
+        averages.rateContact /= numRatings;
+        averages.usefulness /= numRatings;
+        averages.technicality /= numRatings;
+
+        await updateDoc(expertRef, {
+          ratings: arrayUnion(fullFormData),
+          averageRateContact: averages.rateContact,
+          averageUsefulness: averages.usefulness,
+          averageTechnicality: averages.technicality,
+        });
+      }
+
+      setShowRatingForm(false);
+      window.location.reload();
+    } catch (error) {
+      console.error("Error updating expert's rating: ", error);
+    }
   };
 
-  const [rating, setRating] = useState(0);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedUserId = localStorage.getItem("uid");
+      setUserId(storedUserId);
+    }
+  }, []);
+
+  const handleRatingChange = (ratingCategory, value) => {
+    setFormData((prev) => ({ ...prev, [ratingCategory]: value }));
+  };
+
+  const handleFeedbackChange = (e) => {
+    setFormData((prev) => ({ ...prev, additionalFeedback: e.target.value }));
+  };
 
   return (
-    <>
-      <Dialog open={showRatingForm} onOpenChange={setShowRatingForm}>
-        {/* Dialog Trigger */}
-        <DialogTrigger asChild>
-          <Button onClick={handleRatingFormOpen}>Rate Expert</Button>
-        </DialogTrigger>
-
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Rate the Interviewee</DialogTitle>
-          </DialogHeader>
+    <Dialog open={showRatingForm} onOpenChange={setShowRatingForm}>
+      <DialogTrigger asChild>
+        <Button onClick={() => setShowRatingForm(true)}>Rate Expert</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Rate the Expert</DialogTitle>
+        </DialogHeader>
+        {isLoggedIn ? (
           <form onSubmit={handleFormSubmit}>
             <div className="grid gap-4 py-4">
-              <Label htmlFor="name">Name of interviewee:</Label>
-              <Input
-                id="name"
-                name="name"
-                type="text"
-                value={formData.name}
-                onChange={handleInputChange}
+              <RatingComponent
+                label="How easy was the interviewee to contact?"
+                rating={formData.rateContact}
+                handleRatingChange={(value) =>
+                  handleRatingChange("rateContact", value)
+                }
               />
-
-              <Label htmlFor="date">Date interviewed:</Label>
-              <Input
-                id="date"
-                name="date"
-                type="date"
-                value={formData.date}
-                onChange={handleInputChange}
+              <RatingComponent
+                label="How useful was the info the interviewee provided?"
+                rating={formData.usefulness}
+                handleRatingChange={(value) =>
+                  handleRatingChange("usefulness", value)
+                }
               />
-
-              {/* Add other form fields for ratings, yes/no questions, and keywords here */}
-              {/* For example: */}
-              <RatingComponent label="How easy was the interviewee to contact?" />
-              <RatingComponent label="How useful was the info the interviewee provided?" />
-              <RatingComponent label="How technical was the info the interviewee provided?" />
-
+              <RatingComponent
+                label="How technical was the info the interviewee provided?"
+                rating={formData.technicality}
+                handleRatingChange={(value) =>
+                  handleRatingChange("technicality", value)
+                }
+              />
               <Label>Any additional feedback?</Label>
               <textarea
                 name="additionalFeedback"
-                onChange={handleInputChange}
+                onChange={handleFeedbackChange}
                 value={formData.additionalFeedback}
                 className="border p-2 rounded w-full"
               />
@@ -132,7 +153,7 @@ export default function RatingFormDialog({ submitRating }) {
             <DialogFooter>
               <Button
                 type="button"
-                onClick={handleRatingFormClose}
+                onClick={() => setShowRatingForm(false)}
                 variant="outline"
               >
                 Cancel
@@ -140,8 +161,10 @@ export default function RatingFormDialog({ submitRating }) {
               <Button type="submit">Submit</Button>
             </DialogFooter>
           </form>
-        </DialogContent>
-      </Dialog>
-    </>
+        ) : (
+          <p>Please sign in to submit a rating.</p>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 }
