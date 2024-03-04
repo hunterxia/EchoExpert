@@ -17,6 +17,7 @@ import expertMediaAppearances from "../../data/experts_news.json";
 import RatingForm from "../../components/RatingForm";
 import RatingChart from "../../components/RatingChart";
 import CommentSection from "../../components/CommentSection";
+import Suggestion from "../../components/Suggestion"
 import { Button } from "@/components/ui/button";
 
 export default function Page({ params }) {
@@ -129,6 +130,31 @@ export default function Page({ params }) {
   const hasMediaAppearances = mediaAppearances.length > 0;
   const hasCitation = citation && citation.length > 0;
 
+    // Assuming currentExpert and expertsData are already defined
+  const getSimilarExperts = (currentExpert, expertsData) => {
+    const expertMatches = expertsData.map(expert => {
+      if (expert.id === currentExpert.id) {
+        return null;
+      }
+      const matchCount = expert.focus_areas.reduce((count, area) => {
+        return currentExpert.focus_areas.includes(area) ? count + 1 : count;
+      }, 0);
+  
+      return {
+        ...expert,
+        matchCount,
+      };
+    }).filter(Boolean); 
+    expertMatches.sort((a, b) => b.matchCount - a.matchCount);
+    return expertMatches.slice(0, 9);
+  };
+    
+
+  // Now, get the similar experts to the current one
+  console.log("current expert:", expert);
+  const similarExperts = getSimilarExperts(expert, experts);
+  console.log("similarExpers:", similarExperts);
+
   return (
     <div className="container mx-auto p-4">
       <Header />
@@ -212,6 +238,8 @@ export default function Page({ params }) {
           </div>
 
           <Button className="mt-4"onClick={handleContactClick}>Contact {expert.name}</Button>
+
+          <Suggestion experts={similarExperts} />
 
           {/* Rating and Comments */}
           <div className="flex flex-row justify-between items-start mt-8">
