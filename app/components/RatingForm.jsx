@@ -56,7 +56,7 @@ export default function RatingFormDialog({ expertId }) {
     };
 
     try {
-      await addDoc(collection(db, "ratings"), fullFormData);
+      // await addDoc(collection(db, "ratings"), fullFormData);
       const expertRef = doc(db, "experts", expertId);
       const expertSnap = await getDoc(expertRef);
 
