@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Header from "@/app/components/Header";
 import { db, checkIfLoggedIn } from "../../firebase";
 import {
@@ -17,7 +16,7 @@ import expertMediaAppearances from "../../data/experts_news.json";
 import RatingForm from "../../components/RatingForm";
 import RatingChart from "../../components/RatingChart";
 import CommentSection from "../../components/CommentSection";
-import Suggestion from "../../components/Suggestion"
+import Suggestion from "../../components/Suggestion";
 import { Button } from "@/components/ui/button";
 
 export default function Page({ params }) {
@@ -25,7 +24,6 @@ export default function Page({ params }) {
   const citation = citations[expert.name];
   const [citationsToShow, setCitationsToShow] = useState(citation.slice(0, 5));
   const [showAllCitations, setShowAllCitations] = useState(false);
-  const router = useRouter();
 
   const allMediaAppearances = expertMediaAppearances[expert.name];
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -130,30 +128,28 @@ export default function Page({ params }) {
   const hasMediaAppearances = mediaAppearances.length > 0;
   const hasCitation = citation && citation.length > 0;
 
-    // Assuming currentExpert and expertsData are already defined
+  // Assuming currentExpert and expertsData are already defined
   const getSimilarExperts = (currentExpert, expertsData) => {
-    const expertMatches = expertsData.map(expert => {
-      if (expert.id === currentExpert.id) {
-        return null;
-      }
-      const matchCount = expert.focus_areas.reduce((count, area) => {
-        return currentExpert.focus_areas.includes(area) ? count + 1 : count;
-      }, 0);
-  
-      return {
-        ...expert,
-        matchCount,
-      };
-    }).filter(Boolean); 
+    const expertMatches = expertsData
+      .map((expert) => {
+        if (expert.id === currentExpert.id) {
+          return null;
+        }
+        const matchCount = expert.focus_areas.reduce((count, area) => {
+          return currentExpert.focus_areas.includes(area) ? count + 1 : count;
+        }, 0);
+
+        return {
+          ...expert,
+          matchCount,
+        };
+      })
+      .filter(Boolean);
     expertMatches.sort((a, b) => b.matchCount - a.matchCount);
     return expertMatches.slice(0, 9);
   };
-    
 
-  // Now, get the similar experts to the current one
-  console.log("current expert:", expert);
   const similarExperts = getSimilarExperts(expert, experts);
-  console.log("similarExpers:", similarExperts);
 
   return (
     <div className="container mx-auto p-4">
@@ -237,23 +233,25 @@ export default function Page({ params }) {
             )}
           </div>
 
-          <Button className="mt-4"onClick={handleContactClick}>Contact {expert.name}</Button>
+          <Button className="mt-4" onClick={handleContactClick}>
+            Contact {expert.name}
+          </Button>
 
           <Suggestion  experts={similarExperts} />
 
           {/* Rating and Comments */}
           <div className="flex flex-row justify-between items-start mt-8">
-          <div className="w-1/3">
-            <h2 className="text-2xl font-bold mb-2">Rating Distribution</h2>
-            <RatingChart
-              contactAvg={averageRatings.averageRateContact}
-              technicalAvg={averageRatings.averageTechnicality}
-              usefulAvg={averageRatings.averageUsefulness}
-            />
-          </div>
-          <div className="w-2/3 flex flex-col items-center mt-20">
-          <RatingForm expertId={expert.id} />
-          </div>
+            <div className="w-1/3">
+              <h2 className="text-2xl font-bold mb-2">Rating Distribution</h2>
+              <RatingChart
+                contactAvg={averageRatings.averageRateContact}
+                technicalAvg={averageRatings.averageTechnicality}
+                usefulAvg={averageRatings.averageUsefulness}
+              />
+            </div>
+            <div className="w-2/3 flex flex-col items-center mt-20">
+              <RatingForm expertId={expert.id} />
+            </div>
           </div>
           <h3 className="text-2xl font-bold my-4">Comments</h3>
           {isLoggedIn ? (
@@ -261,7 +259,6 @@ export default function Page({ params }) {
           ) : (
             <p>Please sign in to see the comments.</p>
           )}
-          
         </div>
       )}
     </div>
