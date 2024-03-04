@@ -239,7 +239,7 @@ export default function Page({ params }) {
 
           <Button className="mt-4"onClick={handleContactClick}>Contact {expert.name}</Button>
 
-          <Suggestion experts={similarExperts} />
+          <Suggestion  experts={similarExperts} />
 
           {/* Rating and Comments */}
           <div className="flex flex-row justify-between items-start mt-8">
