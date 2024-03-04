@@ -42,7 +42,6 @@ export default function ExpertCard({
           <p className="text-gray-600">
             <strong>School:</strong> {school}
           </p>
-          {/* <p className="text-gray-600"><strong>Email:</strong> {email}</p> */}
         </div>
       </div>
 
