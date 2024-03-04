@@ -157,33 +157,39 @@ export default function Page({ params }) {
       {Object.keys(expert).length > 0 && (
         <div className="mx-auto">
           {/* Expert Details */}
-          <div className="overflow-hidden">
-            <img
-              src={expert.image_src}
-              alt={expert.name}
-              className="w-32 h-auto"
-            />
-          </div>
-          <div className="bg-white p-4 shadow-lg rounded-lg mt-4">
-            <h1 className="text-2xl font-bold mb-2">{expert.name}</h1>
-            {/* Expert Info */}
-            <p className="mb-2">
-              <strong>Email:</strong> {expert.email}
-            </p>
-            <p className="mb-2">
-              <strong>School:</strong> {expert.school}
-            </p>
-            <p className="mb-2">
-              <strong>Title:</strong> {expert.title}
-            </p>
-            <p className="mb-2">
-              <strong>Focus Areas:</strong> {expert.focus_areas.join(", ")}
-            </p>
+          <div className="flex flex-row bg-white p-4 shadow-lg rounded-lg mt-4">
+            <div className="overflow-hidden w-1/5 pr-4">
+              <img
+                src={expert.image_src}
+                alt={expert.name}
+                className="w-40 h-auto rounded-lg"
+              />
+            </div>
+            <div className="w-4/5 ">
+              <h1 className="text-2xl font-bold mb-2">{expert.name}</h1>
+              {/* Expert Info */}
+              <p className="mb-2">
+                <strong>Email:</strong> {expert.email}
+              </p>
+              <p className="mb-2">
+                <strong>School:</strong> {expert.school}
+              </p>
+              <p className="mb-2">
+                <strong>Title:</strong> {expert.title}
+              </p>
+              <p className="mb-2">
+                <strong>Focus Areas:</strong> {expert.focus_areas.join(", ")}
+              </p>
+              <Button className="mt-4" onClick={handleContactClick}>
+                Contact {expert.name}
+              </Button>
+            </div>
           </div>
 
-          <div className="bg-white p-4 shadow-lg rounded-lg mt-4">
-            <h2 className="text-xl font-bold mb-2">Media Appearances</h2>
-            {hasMediaAppearances ? (
+          {/* Media Appearances */}
+          {hasMediaAppearances ? (
+            <div className="bg-white p-4 shadow-lg rounded-lg mt-4">
+              <h2 className="text-xl font-bold mb-2">Media Appearances</h2>
               <ul className="list-disc pl-5">
                 {mediaAppearances.map((appearance, index) => (
                   <li key={index} className="mb-2">
@@ -201,11 +207,8 @@ export default function Page({ params }) {
                   <Button onClick={handleViewMore}>View More</Button>
                 )}
               </ul>
-            ) : (
-              <p>No media appearances available.</p>
-            )}
-          </div>
-
+            </div>
+          ) : null}
           <div className="bg-white p-4 shadow-lg rounded-lg mt-4">
             <h2 className="text-xl font-bold mb-2">Citations</h2>
             {citation && citation.length > 0 ? (
@@ -232,12 +235,7 @@ export default function Page({ params }) {
               <p>No citations available.</p>
             )}
           </div>
-
-          <Button className="mt-4" onClick={handleContactClick}>
-            Contact {expert.name}
-          </Button>
-
-          <Suggestion  experts={similarExperts} />
+          <Suggestion experts={similarExperts} />
 
           {/* Rating and Comments */}
           <div className="flex flex-row justify-between items-start mt-8">
