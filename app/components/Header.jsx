@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import AccountButton from "./Login";
-import UserNav from "./UserNav";
 
 export default function Header() {
   return (
@@ -18,7 +17,6 @@ export default function Header() {
           }}
         />
       </Link>
-      <UserNav />
       <AccountButton />
     </header>
   );
