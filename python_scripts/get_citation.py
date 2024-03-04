@@ -112,9 +112,9 @@ def fetch_profile_papers(user_id, max_papers=100):
 
     return papers
 
-def fetch_papers(professor_name):
+def fetch_papers(professor_email):
     base_url = "https://scholar.google.com/scholar"
-    search_query = f"{base_url}?q={professor_name}"
+    search_query = f"{base_url}?q={professor_email}"
     papers = []
 
     response = requests.get(search_query)
@@ -136,9 +136,9 @@ def fetch_papers(professor_name):
 
     return papers
 
-def extract_user_id_from_search(professor_name):
+def extract_user_id_from_search(professor_email):
     base_url = "https://scholar.google.com/scholar"
-    search_query = f"{base_url}?q={professor_name}"
+    search_query = f"{base_url}?q={professor_email}"
     user_id = None
 
     try:
@@ -164,13 +164,14 @@ def fetch_all_professors_papers(json_file_path, output_json_file_path):
 
         for professor in professors_data:
             professor_name = professor['name']
+            professor_email = professor['email']
             print(f"Fetching papers for: {professor_name}")
 
-            user_id = extract_user_id_from_search(professor_name)
+            user_id = extract_user_id_from_search(professor_email)
             if user_id:
                 papers = fetch_profile_papers(user_id)
             else:
-                papers = fetch_papers(professor_name)
+                papers = fetch_papers(professor_email)
 
             print(f"Papers found: {len(papers)}")
             all_papers[professor_name] = papers
