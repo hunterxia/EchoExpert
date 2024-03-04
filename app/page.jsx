@@ -69,7 +69,7 @@ export default function Home() {
     <div>
       <Header />
       <SearchBar setSearchQuery={setSearchQuery} />
-      <div>
+      <div className="flex justify-end pr-8">
         <Select onValueChange={handleSortChange}>
           <SelectTrigger className="w-auto">
             <SelectValue placeholder="Sort by" />
@@ -91,7 +91,7 @@ export default function Home() {
           </SelectContent>
         </Select>
       </div>
-      <div className="max-w-full mx-auto px-4 py-8">
+      <div className="max-w-full mx-auto px-4 pb-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
           {sortedExperts.map((expert, index) => (
             <ExpertCard key={index} {...expert} />

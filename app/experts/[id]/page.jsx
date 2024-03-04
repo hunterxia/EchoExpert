@@ -209,9 +209,10 @@ export default function Page({ params }) {
               </ul>
             </div>
           ) : null}
-          <div className="bg-white p-4 shadow-lg rounded-lg mt-4">
-            <h2 className="text-xl font-bold mb-2">Citations</h2>
-            {citation && citation.length > 0 ? (
+
+          {citation && citation.length > 0 ? (
+            <div className="bg-white p-4 shadow-lg rounded-lg mt-4">
+              <h2 className="text-xl font-bold mb-2">Citations</h2>
               <ul className="list-disc pl-5">
                 {citationsToShow.map((cit, index) => (
                   <li key={index} className="mb-2">
@@ -231,10 +232,9 @@ export default function Page({ params }) {
                   <Button onClick={handleViewMoreCitations}>View More</Button>
                 )}
               </ul>
-            ) : (
-              <p>No citations available.</p>
-            )}
-          </div>
+            </div>
+          ) : null}
+
           <Suggestion experts={similarExperts} />
 
           {/* Rating and Comments */}

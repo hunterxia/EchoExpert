@@ -10,11 +10,15 @@ const StarRating = ({ value }) => {
   return (
     <div className="flex items-center">
       {[...Array(fullStars)].map((_, i) => (
-        <span key={i} className="text-yellow-400">★</span>
+        <span key={i} className="text-yellow-400">
+          ★
+        </span>
       ))}
       {halfStar === 1 && <span className="text-yellow-400">★</span>}
       {[...Array(emptyStars)].map((_, i) => (
-        <span key={i} className="text-gray-300">☆</span>
+        <span key={i} className="text-gray-300">
+          ☆
+        </span>
       ))}
       <span className="ml-2 text-gray-600">{value.toFixed(1)}</span>
     </div>
