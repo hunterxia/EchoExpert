@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ViewCountProvider } from './components/View';
 
 export default function Home() {
   const searchQuery = useEventStore((state) => state.searchQuery);
@@ -67,6 +68,7 @@ export default function Home() {
 
   return (
     <div>
+      <ViewCountProvider>
       <Header />
       <SearchBar setSearchQuery={setSearchQuery} />
       <div className="flex justify-end pr-8">
@@ -98,6 +100,7 @@ export default function Home() {
           ))}
         </div>
       </div>
+      </ViewCountProvider>
     </div>
   );
 }

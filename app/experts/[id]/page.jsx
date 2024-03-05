@@ -18,6 +18,7 @@ import RatingChart from "../../components/RatingChart";
 import CommentSection from "../../components/CommentSection";
 import Suggestion from "../../components/Suggestion";
 import { Button } from "@/components/ui/button";
+import { useViewCount } from '../../components/View';
 
 export default function Page({ params }) {
   const expert = experts.find((e) => e.id === params.id);
@@ -38,6 +39,17 @@ export default function Page({ params }) {
     averageUsefulness: 0,
     averageTechnicality: 0,
   });
+  const { viewCount, incrementViewCount } = useViewCount();
+
+  useEffect(() => {
+    incrementViewCount();
+  }, []);
+
+  useEffect(() => {
+    if (viewCount >= 2) {
+      alert('Please subscribe to unlock more expert profiles.');
+    }
+  }, [viewCount]);
 
   useEffect(() => {
     const loggedIn = checkIfLoggedIn();
