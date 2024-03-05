@@ -2112,25 +2112,25 @@
             "title": "Thousands of small, constant rallies: A large-scale analysis of partisan WhatsApp groups",
             "link": "https://dl.acm.org/doi/abs/10.1145/3341161.3342905",
             "citations": "Cited by 41",
-            "co_authors": "VS Bursztyn "
+            "co_authors": "VS Bursztyn, L Birnbaum"
         },
         {
             "title": "Definition modeling: Learning to define word embeddings in natural language",
             "link": "https://ojs.aaai.org/index.php/AAAI/article/view/10996",
             "citations": "Cited by 117",
-            "co_authors": "T Noraset, C Liang "
+            "co_authors": "T Noraset, C Liang, L Birnbaum"
         },
         {
             "title": "HCI for accurate, impartial and transparent journalism: Challenges and solutions",
             "link": "https://dl.acm.org/doi/abs/10.1145/3290607.3299007",
             "citations": "Cited by 22",
-            "co_authors": "M Ananny, CW Anderson "
+            "co_authors": "M Ananny, CW Anderson, L Birnbaum"
         },
         {
             "title": "[PDF][PDF] TagAssist: Automatic Tag Suggestion for Blog Posts.",
             "link": "https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=be6756f930b42345e84a79d365db498a825bb4dd",
             "citations": "Cited by 231",
-            "co_authors": "S Sood, S Owsley, KJ Hammond "
+            "co_authors": "S Sood, S Owsley, KJ Hammond, L Birnbaum"
         },
         {
             "title": "[PDF][PDF] CARDIOVASCULAR RESPONSES TO MUSIC TEMPO DURING STEADY-STATE EXERCISE.",
@@ -2142,7 +2142,7 @@
             "title": "[PDF][PDF] Statsmonkey: A data-driven sports narrative writer",
             "link": "https://cdn.aaai.org/ocs/2305/2305-9761-1-PB.pdf",
             "citations": "Cited by 68",
-            "co_authors": "JR Templon, PS McNally "
+            "co_authors": "JR Templon, PS McNally, L Birnbaum"
         },
         {
             "title": "Physiologic effects of caffeine on crosscountry runners",
@@ -2154,19 +2154,19 @@
             "title": "[BOOK][B] Before Elvis: the prehistory of rock'n'roll",
             "link": "https://books.google.com/books?hl=en&lr=&id=F2lKOl2R8FcC&oi=fnd&pg=PR5&dq=Larry+Birnbaum&ots=2tSJWvUuTF&sig=JjSXm5_0BPYKykdpS2nYF5b3EDI",
             "citations": "Cited by 44",
-            "co_authors": " "
+            "co_authors": "L Birnbaum - 2012 - books.google.com"
         },
         {
             "title": "Extracting commonsense properties from embeddings with limited human guidance",
             "link": "https://aclanthology.org/P18-2102/",
             "citations": "Cited by 25",
-            "co_authors": "Y Yang , JP Wang"
+            "co_authors": "Y Yang, L Birnbaum, JP Wang"
         },
         {
             "title": "Tell me more, not just\" more of the same\"",
             "link": "https://dl.acm.org/doi/abs/10.1145/1719970.1719982",
             "citations": "Cited by 38",
-            "co_authors": "F Iacobelli , KJ Hammond"
+            "co_authors": "F Iacobelli, L Birnbaum, KJ Hammond"
         }
     ],
     "Neal Blair": [
@@ -7310,7 +7310,7 @@
                 "title": "Toward the next generation of news recommender systems",
                 "link": "https://dl.acm.org/doi/abs/10.1145/3442442.3452327",
                 "citations": "Cited by 23",
-                "co_authors": "H Abdollahpouri, EC Malthouse, JA Konstan"
+                "co_authors": "H Abdollahpouri, EC Malthouse, JA Konstan, JD Gilbert"
             }
         ],
         "Danielle Gilbert": [

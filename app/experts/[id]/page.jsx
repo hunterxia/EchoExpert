@@ -129,27 +129,71 @@ export default function Page({ params }) {
   const hasCitation = citation && citation.length > 0;
 
   // Assuming currentExpert and expertsData are already defined
-  const getSimilarExperts = (currentExpert, expertsData) => {
+  const getSimilarExperts = (currentExpert, expertsData, coAuthorsData) => {
+    const currentExpertSchools = new Set(currentExpert.school.split(',').map(s => s.trim()));
+    
+    // Extract last name of the current expert
+    const current = currentExpert.name
+  
+    const currentExpertCoAuthorLastNames = new Set();
+    console.log("current", current)
+    console.log("current citation",coAuthorsData)
+    
+    // Collect last names of co-authors of the current expert
+    if (coAuthorsData) {
+      console.log("test1");
+      coAuthorsData.forEach(publication => {
+        console.log("coauthor:", publication.co_authors)
+        publication.co_authors.split(',').forEach(coAuthor => {
+          const lastName = coAuthor.trim().split(' ').pop();
+          currentExpertCoAuthorLastNames.add(lastName);
+        });
+      });
+    }
+  
     const expertMatches = expertsData
       .map((expert) => {
         if (expert.id === currentExpert.id) {
           return null;
         }
-        const matchCount = expert.focus_areas.reduce((count, area) => {
+  
+        const expertLastName = expert.name.split(' ').pop();
+        const expertSchools = new Set(expert.school.split(',').map(s => s.trim()));
+        const commonSchools = [...currentExpertSchools].some(school => expertSchools.has(school));
+  
+        const focusAreaMatchCount = expert.focus_areas.reduce((count, area) => {
           return currentExpert.focus_areas.includes(area) ? count + 1 : count;
         }, 0);
-
+  
+        const isCoAuthorLastName = currentExpertCoAuthorLastNames.has(expertLastName);
+  
         return {
           ...expert,
-          matchCount,
+          focusAreaMatchCount,
+          isCoAuthorLastName,
+          commonSchools
         };
       })
       .filter(Boolean);
-    expertMatches.sort((a, b) => b.matchCount - a.matchCount);
+  
+    expertMatches.sort((a, b) => {
+      if (a.isCoAuthorLastName && !b.isCoAuthorLastName) return -1;
+      if (!a.isCoAuthorLastName && b.isCoAuthorLastName) return 1;
+  
+      if (a.commonSchools && !b.commonSchools) return -1;
+      if (!a.commonSchools && b.commonSchools) return 1;
+  
+      return b.focusAreaMatchCount - a.focusAreaMatchCount;
+    });
+  
     return expertMatches.slice(0, 9);
   };
 
-  const similarExperts = getSimilarExperts(expert, experts);
+  const similarExperts = getSimilarExperts(expert, experts, citation);
+  
+  
+  
+  
 
   return (
     <div className="container mx-auto p-4">
@@ -225,7 +269,7 @@ export default function Page({ params }) {
                       {cit.title}
                     </a>
                     <a> {cit.citations}</a>
-                    <p>Co-authors: {cit.co_authors}</p>
+                    <p>Authors: {cit.co_authors}</p>
                   </li>
                 ))}
                 {!showAllCitations && citation.length > 5 && (
