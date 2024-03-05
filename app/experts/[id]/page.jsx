@@ -130,12 +130,18 @@ export default function Page({ params }) {
 
   // Assuming currentExpert and expertsData are already defined
   const getSimilarExperts = (currentExpert, expertsData, coAuthorsData) => {
+    const extractNameDetails = (fullName) => {
+      const parts = fullName.trim().split(' ');
+      const firstNameLetter = parts[0] ? parts[0][0] : ''; // First letter of the first name
+      const lastName = parts[parts.length - 1] || ''; // Last name
+      return { firstNameLetter, lastName };
+    };
     const currentExpertSchools = new Set(currentExpert.school.split(',').map(s => s.trim()));
     
     // Extract last name of the current expert
     const current = currentExpert.name
   
-    const currentExpertCoAuthorLastNames = new Set();
+    const currentExpertCoAuthorNames = new Set();
     console.log("current", current)
     console.log("current citation",coAuthorsData)
     
@@ -145,49 +151,50 @@ export default function Page({ params }) {
       coAuthorsData.forEach(publication => {
         console.log("coauthor:", publication.co_authors)
         publication.co_authors.split(',').forEach(coAuthor => {
-          const lastName = coAuthor.trim().split(' ').pop();
-          currentExpertCoAuthorLastNames.add(lastName);
+          const { firstNameLetter, lastName } = extractNameDetails(coAuthor);
+          currentExpertCoAuthorNames.add(firstNameLetter + lastName);
         });
       });
     }
   
     const expertMatches = expertsData
-      .map((expert) => {
-        if (expert.id === currentExpert.id) {
-          return null;
-        }
-  
-        const expertLastName = expert.name.split(' ').pop();
-        const expertSchools = new Set(expert.school.split(',').map(s => s.trim()));
-        const commonSchools = [...currentExpertSchools].some(school => expertSchools.has(school));
-  
-        const focusAreaMatchCount = expert.focus_areas.reduce((count, area) => {
-          return currentExpert.focus_areas.includes(area) ? count + 1 : count;
-        }, 0);
-  
-        const isCoAuthorLastName = currentExpertCoAuthorLastNames.has(expertLastName);
-  
-        return {
-          ...expert,
-          focusAreaMatchCount,
-          isCoAuthorLastName,
-          commonSchools
-        };
-      })
-      .filter(Boolean);
-  
-    expertMatches.sort((a, b) => {
-      if (a.isCoAuthorLastName && !b.isCoAuthorLastName) return -1;
-      if (!a.isCoAuthorLastName && b.isCoAuthorLastName) return 1;
-  
-      if (a.commonSchools && !b.commonSchools) return -1;
-      if (!a.commonSchools && b.commonSchools) return 1;
-  
-      return b.focusAreaMatchCount - a.focusAreaMatchCount;
-    });
-  
-    return expertMatches.slice(0, 9);
-  };
+    .map((expert) => {
+      if (expert.id === currentExpert.id) {
+        return null;
+      }
+
+      const expertNameDetails = extractNameDetails(expert.name);
+      const expertFullNameInitial = expertNameDetails.firstNameLetter + expertNameDetails.lastName;
+      const expertSchools = new Set(expert.school.split(',').map(s => s.trim()));
+      const commonSchools = [...currentExpertSchools].some(school => expertSchools.has(school));
+
+      const focusAreaMatchCount = expert.focus_areas.reduce((count, area) => {
+        return currentExpert.focus_areas.includes(area) ? count + 1 : count;
+      }, 0);
+
+      const isCoAuthorMatch = currentExpertCoAuthorNames.has(expertFullNameInitial);
+
+      return {
+        ...expert,
+        focusAreaMatchCount,
+        isCoAuthorMatch,
+        commonSchools
+      };
+    })
+    .filter(Boolean);
+
+  expertMatches.sort((a, b) => {
+    if (a.isCoAuthorMatch && !b.isCoAuthorMatch) return -1;
+    if (!a.isCoAuthorMatch && b.isCoAuthorMatch) return 1;
+
+    if (a.commonSchools && !b.commonSchools) return -1;
+    if (!a.commonSchools && b.commonSchools) return 1;
+
+    return b.focusAreaMatchCount - a.focusAreaMatchCount;
+  });
+
+  return expertMatches.slice(0, 9);
+};
 
   const similarExperts = getSimilarExperts(expert, experts, citation);
   
