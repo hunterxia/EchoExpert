@@ -7,6 +7,7 @@ import experts from "./data/experts_data.json";
 import citations from "./data/experts_citation.json";
 import expertMediaAppearances from "./data/experts_news.json";
 import { useState } from "react";
+import Link from 'next/link';
 import {
   Select,
   SelectContent,
