@@ -35,6 +35,8 @@ export default function SubscriptionPage() {
       router.push("/");
     } else {
       // Logic for basic plan, if any
+      const userId = localStorage.getItem("uid");
+      await updateUserSubscriptionStatus(userId, false);
       alert("Signed up for the basic plan.");
       router.push("/");
     }

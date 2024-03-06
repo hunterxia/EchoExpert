@@ -77,6 +77,7 @@ export default function Page({ params }) {
           }
         }
       } else {
+        alert("Please sign in to view this page.");
         router.push("/subscription");
       }
     };
