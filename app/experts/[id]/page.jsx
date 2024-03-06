@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Header from "@/app/components/Header";
 import {
   db,
@@ -30,6 +31,7 @@ export default function Page({ params }) {
   const [citationsToShow, setCitationsToShow] = useState(citation.slice(0, 5));
   const [showAllCitations, setShowAllCitations] = useState(false);
   const [user, setUser] = useState(null);
+  const router = useRouter();
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [viewCount, setViewCount] = useState(0);
   const VIEW_LIMIT = 3;
@@ -66,15 +68,16 @@ export default function Page({ params }) {
               // Increment view count and update Firestore
               updateUserViewCount(uid);
             } else {
-              // alert(
-              //   "You have reached your view limit for detailed expert pages. Please subscribe to view more."
-              // );
+              alert(
+                "You have reached your view limit for detailed expert pages. Please subscribe to view more."
+              );
+              router.push("/subscription");
               // Handle view limit reached (e.g., redirect to subscription page)
             }
           }
         }
       } else {
-        alert("You have to log in for detailed expert pages.");
+        router.push("/subscription");
       }
     };
 
@@ -274,8 +277,8 @@ export default function Page({ params }) {
     <div className="container mx-auto p-4">
       <Header />
       {Object.keys(expert).length > 0 &&
-        viewCount < VIEW_LIMIT &&
-        checkIfLoggedIn(
+        (viewCount < VIEW_LIMIT || isSubscribed) &&
+        isLoggedIn && (
           <div className="mx-auto">
             {/* Expert Details */}
             <div className="flex flex-row bg-white p-4 shadow-lg rounded-lg mt-4">
