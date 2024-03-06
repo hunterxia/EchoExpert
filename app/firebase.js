@@ -82,6 +82,8 @@ const signUpWithGoogle = async (navigate) => {
           displayName: user.displayName,
           photoURL: user.photoURL,
           uid: user.uid,
+          isSubscribed: false,
+          viewCount: 0,
         };
         await setDoc(userDocRef, userData, { merge: true });
         signInWithGoogle(user, navigate);
@@ -126,6 +128,32 @@ const getUserData = async () => {
   return null;
 };
 
+const updateUserViewCount = async (uid, increment = 1) => {
+  try {
+    const userRef = doc(db, "users", uid);
+    const userSnap = await getDoc(userRef);
+    if (userSnap.exists()) {
+      const userData = userSnap.data();
+      const newViewCount = (userData.viewCount || 0) + increment;
+      await updateDoc(userRef, { viewCount: newViewCount });
+    } else {
+      console.error("User not found");
+    }
+  } catch (error) {
+    console.error("Error updating user's view count: ", error);
+  }
+};
+
+// Function to update the subscription status
+const updateUserSubscriptionStatus = async (uid, isSubscribed) => {
+  try {
+    const userRef = doc(db, "users", uid);
+    await updateDoc(userRef, { isSubscribed: isSubscribed });
+  } catch (error) {
+    console.error("Error updating user's subscription status: ", error);
+  }
+};
+
 const updateUserSettings = async (uid, settings) => {
   console.log("updating settings", settings);
   const userRef = doc(db, "users", uid);
@@ -141,4 +169,6 @@ export {
   getUserData,
   handleLogOut,
   updateUserSettings,
+  updateUserViewCount,
+  updateUserSubscriptionStatus,
 };
