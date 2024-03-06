@@ -2,12 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Header from "@/app/components/Header";
-import {
-  db,
-  checkIfLoggedIn,
-  updateUserViewCount,
-  updateUserSubscriptionStatus,
-} from "../../firebase";
+import { db, checkIfLoggedIn, updateUserViewCount } from "../../firebase";
 import {
   collection,
   query,
@@ -58,22 +53,22 @@ export default function Page({ params }) {
 
         if (userSnap.exists()) {
           const userData = userSnap.data();
-          setUser(userData);
-          setIsSubscribed(userData.isSubscribed);
-          setViewCount(userData.viewCount || 0);
 
           if (!userData.isSubscribed) {
             console.log("User is not subscribed");
             if ((userData.viewCount || 0) < VIEW_LIMIT) {
-              // Increment view count and update Firestore
-              updateUserViewCount(uid);
+              updateUserViewCount(uid); // This should also be handled carefully
             } else {
               alert(
                 "You have reached your view limit for detailed expert pages. Please subscribe to view more."
               );
               router.push("/subscription");
-              // Handle view limit reached (e.g., redirect to subscription page)
             }
+          } else {
+            // User is subscribed, set states accordingly
+            setUser(userData);
+            setIsSubscribed(userData.isSubscribed);
+            setViewCount(userData.viewCount || 0);
           }
         }
       } else {

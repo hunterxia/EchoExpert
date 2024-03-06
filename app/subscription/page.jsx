@@ -28,13 +28,11 @@ export default function SubscriptionPage() {
 
   const handleSubscription = async (planType) => {
     if (planType !== "basic") {
-      // Retrieve the user's ID to update their subscription status
       const userId = localStorage.getItem("uid");
       await updateUserSubscriptionStatus(userId, true);
       alert(`You are now subscribed to the ${planType} plan.`);
       router.push("/");
     } else {
-      // Logic for basic plan, if any
       const userId = localStorage.getItem("uid");
       await updateUserSubscriptionStatus(userId, false);
       alert("Signed up for the basic plan.");
