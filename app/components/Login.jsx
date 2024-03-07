@@ -66,13 +66,26 @@ export default function AccountButton() {
           </DropdownMenuContent>
         </DropdownMenu>
       ) : (
-        <button
-          className="fixed top-0 right-0 m-4 flex flex-row flex-shrink-0 items-center justify-center truncate transition duration-200 ease-out disabled:pointer-events-auto disabled:opacity-50 bg-white shadow ring-1 ring-gray-200 hover:bg-gray-50 px-2.5 sm:px-2 py-2 h-9 sm:h-8 sm:text-sm rounded-lg font-medium input-focus-ring select-none"
-          onClick={handleSignIn}
-        >
-          <span className="material-symbols-outlined">person</span>
-          Sign In
-        </button>
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            className="fixed top-0 right-0 m-4 flex flex-row flex-shrink-0
+          items-center justify-center truncate transition duration-200
+          ease-out disabled:pointer-events-auto disabled:opacity-50 bg-white
+          shadow ring-1 ring-gray-200 hover:bg-gray-50 px-2.5 sm:px-2 py-2 h-9
+          sm:h-8 sm:text-sm rounded-lg font-medium input-focus-ring
+          select-none"
+          >
+            <span className="material-symbols-outlined">person</span>
+            My Account
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem onClick={() => router.push("/subscription")}>
+              Subscription
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleSignIn}>Sign In</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       )}
     </div>
   );
