@@ -18,7 +18,6 @@ import RatingForm from "../../components/RatingForm";
 import RatingChart from "../../components/RatingChart";
 import CommentSection from "../../components/CommentSection";
 import Suggestion from "../../components/Suggestion";
-import SkeletonCard from "../../components/SkeletonCard";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 
