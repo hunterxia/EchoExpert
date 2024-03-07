@@ -18,6 +18,8 @@ import RatingForm from "../../components/RatingForm";
 import RatingChart from "../../components/RatingChart";
 import CommentSection from "../../components/CommentSection";
 import Suggestion from "../../components/Suggestion";
+import SkeletonCard from "../../components/SkeletonCard";
+import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 
 export default function Page({ params }) {
@@ -27,6 +29,9 @@ export default function Page({ params }) {
   const [showAllCitations, setShowAllCitations] = useState(false);
   const [user, setUser] = useState(null);
   const router = useRouter();
+  const [progress, setProgress] = useState(0);
+  const [generatingSuggestions, setGeneratingSuggestions] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [viewCount, setViewCount] = useState(0);
   const VIEW_LIMIT = 3;
@@ -43,6 +48,26 @@ export default function Page({ params }) {
     averageUsefulness: 0,
     averageTechnicality: 0,
   });
+
+  const startGeneratingSuggestions = () => {
+    setGeneratingSuggestions(true);
+    setShowSuggestions(true);
+    setProgress(0);
+
+    const interval = setInterval(() => {
+      setProgress((oldProgress) => {
+        if (oldProgress === 100) {
+          clearInterval(interval);
+          setGeneratingSuggestions(false);
+          return 100;
+        }
+        const diff = 100 / 2;
+        return Math.min(oldProgress + diff, 100);
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -248,25 +273,31 @@ export default function Page({ params }) {
     if (isSubscribed) {
       return (
         <>
-          <div className="flex flex-row justify-between items-start mt-8">
-            <div className="w-1/3">
-              <h2 className="text-2xl font-bold mb-2">Rating Distribution</h2>
-              <RatingChart
-                contactAvg={averageRatings.averageRateContact}
-                technicalAvg={averageRatings.averageTechnicality}
-                usefulAvg={averageRatings.averageUsefulness}
-              />
-            </div>
-            <div className="w-2/3 flex flex-col items-center mt-20">
-              <RatingForm expertId={expert.id} />
+          <div className="bg-white p-4 shadow-lg rounded-lg mt-4">
+            <div className="flex flex-row justify-between items-start mt-8">
+              <div className="w-1/3">
+                <h2 className="text-2xl font-bold mb-2">Rating Distribution</h2>
+                <RatingChart
+                  contactAvg={averageRatings.averageRateContact}
+                  technicalAvg={averageRatings.averageTechnicality}
+                  usefulAvg={averageRatings.averageUsefulness}
+                />
+              </div>
+              <div className="w-2/3 flex flex-col items-center mt-20">
+                <RatingForm expertId={expert.id} />
+              </div>
             </div>
           </div>
-          <h3 className="text-2xl font-bold my-4">Comments</h3>
-          <CommentSection comments={commentsData} loading={loading} />
+          <div className="bg-white p-4 shadow-lg rounded-lg mt-4">
+            <h3 className="text-2xl font-bold my-4">Comments</h3>
+            <CommentSection comments={commentsData} loading={loading} />
+          </div>
         </>
       );
     }
-    return <p>Please subscribe to access ratings and comments.</p>;
+    return (
+      <p className="mt-4">Please subscribe to access ratings and comments.</p>
+    );
   };
 
   return (
@@ -354,7 +385,33 @@ export default function Page({ params }) {
                 </ul>
               </div>
             ) : null}
-            <Suggestion experts={similarExperts} />
+
+            {/* Suggestions */}
+            <div className="bg-white p-4 shadow-lg rounded-lg mt-4">
+              <h2 className="text-2xl font-bold mb-4">Suggestions</h2>
+              {!showSuggestions && (
+                <Button onClick={startGeneratingSuggestions} className="my-4">
+                  Generate Suggestions
+                </Button>
+              )}
+              {showSuggestions && (
+                <div className="suggestions-area">
+                  {generatingSuggestions ? (
+                    <>
+                      <p className="text-center font-bold">
+                        Generating suggestions...
+                      </p>
+                      <Progress
+                        value={progress}
+                        className="w-[60%] mx-auto my-2"
+                      />
+                    </>
+                  ) : (
+                    <Suggestion experts={similarExperts} />
+                  )}
+                </div>
+              )}
+            </div>
             {/* Rating and Comments */}
             {renderRatingAndComments()}
           </div>
